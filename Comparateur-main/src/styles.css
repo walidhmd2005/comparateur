@@ -1,0 +1,129 @@
+:root {
+  color-scheme: dark;
+  --bg-0: #07101d;
+  --bg-1: #0b1728;
+  --bg-2: #102239;
+  --panel: rgba(17, 34, 55, 0.76);
+  --panel-strong: rgba(21, 43, 68, 0.9);
+  --line: rgba(151, 203, 255, 0.2);
+  --line-bright: rgba(86, 223, 255, 0.5);
+  --text: #edf8ff;
+  --muted: #96acc4;
+  --cyan: #4ee9ff;
+  --coral: #ff6f86;
+  --green: #73f6b2;
+  --gold: #ffd166;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg-0);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(78, 233, 255, 0.14), transparent 27rem),
+    radial-gradient(circle at 78% 10%, rgba(255, 111, 134, 0.13), transparent 22rem),
+    linear-gradient(135deg, #060c17 0%, #0b1828 48%, #101923 100%);
+  overflow-x: hidden;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  content: "";
+  background:
+    linear-gradient(rgba(90, 160, 220, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 160, 220, 0.08) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.92), transparent 78%);
+}
+
+body::after {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: -1;
+  height: 38vh;
+  content: "";
+  background:
+    linear-gradient(110deg, transparent 0 14%, rgba(78, 233, 255, 0.16) 14.3%, transparent 14.8% 44%, rgba(255, 209, 102, 0.14) 44.3%, transparent 44.8%),
+    linear-gradient(25deg, transparent 0 35%, rgba(115, 246, 178, 0.13) 35.2%, transparent 35.7% 67%, rgba(255, 111, 134, 0.12) 67.2%, transparent 67.7%);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glass-panel {
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(145deg, rgba(23, 48, 75, 0.88), rgba(8, 21, 38, 0.78)),
+    rgba(10, 23, 38, 0.72);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.primary-action,
+.secondary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.primary-action {
+  color: #04101b;
+  border: 1px solid rgba(78, 233, 255, 0.72);
+  background: linear-gradient(135deg, #8df7ff, #ff8da0);
+  box-shadow: 0 14px 32px rgba(78, 233, 255, 0.18);
+}
+
+.secondary-action {
+  color: var(--text);
+  border: 1px solid rgba(151, 203, 255, 0.26);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.primary-action:hover,
+.secondary-action:hover {
+  transform: translateY(-1px);
+}
+
+::selection {
+  color: #06111d;
+  background: var(--cyan);
+}

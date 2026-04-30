@@ -1,0 +1,302 @@
+<section class="formulaire">
+  <div class="container">
+
+    @if (!soumis()) {
+      <div class="progress-wrap">
+        <div class="progress-bar" [style.width]="progression() + '%'"></div>
+      </div>
+      <p class="etape-label">Étape {{ etape() }} sur {{ totalEtapes }}</p>
+
+      <div [class.slide-out]="animating()" [class.slide-in]="!animating()">
+
+        <!-- ÉTAPE 1 — Énergie -->
+        @if (etape() === 1) {
+          <h2>Quel est votre besoin en énergie ?</h2>
+          <div class="choix-grid cols-3">
+            <div class="choix-card" [class.selected]="energie() === 'electricite'" (click)="select('energie','electricite')">
+              <div class="choix-icon">💡</div>
+              <p>Électricité</p>
+              <div class="radio" [class.checked]="energie() === 'electricite'"></div>
+            </div>
+            <div class="choix-card" [class.selected]="energie() === 'gaz'" (click)="select('energie','gaz')">
+              <div class="choix-icon">🔥</div>
+              <p>Gaz</p>
+              <div class="radio" [class.checked]="energie() === 'gaz'"></div>
+            </div>
+            <div class="choix-card" [class.selected]="energie() === 'les deux'" (click)="select('energie','les deux')">
+              <div class="choix-icon">⚡</div>
+              <p>Électricité + Gaz</p>
+              <div class="radio" [class.checked]="energie() === 'les deux'"></div>
+            </div>
+          </div>
+        }
+
+        <!-- ÉTAPE 2 — Besoin -->
+        @if (etape() === 2) {
+          <h2>Vous souhaitez comparer les tarifs pour :</h2>
+          <div class="choix-grid cols-3">
+            <div class="choix-card" [class.selected]="besoin() === 'nouveau'" (click)="select('besoin','nouveau')">
+              <div class="choix-icon">🏗️</div>
+              <p>Un nouveau logement</p>
+              <div class="radio" [class.checked]="besoin() === 'nouveau'"></div>
+            </div>
+            <div class="choix-card" [class.selected]="besoin() === 'actuel'" (click)="select('besoin','actuel')">
+              <div class="choix-icon">🏠</div>
+              <p>Mon logement actuel</p>
+              <div class="radio" [class.checked]="besoin() === 'actuel'"></div>
+            </div>
+            <div class="choix-card" [class.selected]="besoin() === 'pro'" (click)="select('besoin','pro')">
+              <div class="choix-icon">💼</div>
+              <p>Mon entreprise (offre pro)</p>
+              <div class="radio" [class.checked]="besoin() === 'pro'"></div>
+            </div>
+          </div>
+          <button class="btn-retour" (click)="retour()">← Retour</button>
+        }
+
+        <!-- ÉTAPE 3 — Code postal -->
+        @if (etape() === 3) {
+          <h2>Quel est le code postal de votre logement ?</h2>
+          <input class="input-field" type="text" placeholder="Ville ou Code postal"
+                 [value]="codePostal()" (input)="codePostal.set($any($event.target).value)" />
+          <div class="btn-group">
+            <button class="btn-retour" (click)="retour()">← Retour</button>
+            <button class="btn-continuer" [disabled]="!codePostal()" (click)="suivant()">Continuer</button>
+          </div>
+        }
+
+        <!-- ÉTAPE 4 — Consommation -->
+        @if (etape() === 4) {
+          <h2>Connaissez-vous votre consommation annuelle ?</h2>
+          <p class="sous-titre">Pas de panique si vous ne la connaissez pas, nous vous aidons à faire une estimation.</p>
+          <div class="choix-liste">
+            <div class="choix-liste-item" [class.selected]="consommation() === 'oui'" (click)="select('consommation','oui')">
+              <div class="radio-sm" [class.checked]="consommation() === 'oui'"></div>
+              Oui, je la connais
+            </div>
+            <div class="choix-liste-item" [class.selected]="consommation() === 'non'" (click)="select('consommation','non')">
+              <div class="radio-sm" [class.checked]="consommation() === 'non'"></div>
+              Non, faisons une estimation
+            </div>
+          </div>
+          <button class="btn-retour" (click)="retour()">← Retour</button>
+        }
+
+        <!-- ÉTAPE 5 — Type logement -->
+        @if (etape() === 5) {
+          <div class="info-box">
+            <span>🧑‍💼</span>
+            <div><strong>C'est parti !</strong><p>En quelques questions, estimons ensemble votre consommation !</p></div>
+          </div>
+          <h2>Quel est votre type de logement ?</h2>
+          <div class="choix-grid cols-2">
+            <div class="choix-card" [class.selected]="logement() === 'maison'" (click)="select('logement','maison')">
+              <div class="choix-icon">🏠</div><p>Maison</p>
+              <div class="radio" [class.checked]="logement() === 'maison'"></div>
+            </div>
+            <div class="choix-card" [class.selected]="logement() === 'appartement'" (click)="select('logement','appartement')">
+              <div class="choix-icon">🏢</div><p>Appartement</p>
+              <div class="radio" [class.checked]="logement() === 'appartement'"></div>
+            </div>
+          </div>
+          <h2>Quelle est la surface de votre logement ?</h2>
+          <div class="input-suffix-wrap">
+            <input class="input-field" type="number" placeholder="Surface"
+                   [value]="surface()" (input)="surface.set($any($event.target).value)" />
+            <span class="suffix">m²</span>
+          </div>
+          <div class="btn-group">
+            <button class="btn-retour" (click)="retour()">← Retour</button>
+            <button class="btn-continuer" [disabled]="!logement() || !surface()" (click)="suivant()">Continuer</button>
+          </div>
+        }
+
+        <!-- ÉTAPE 6 — Personnes -->
+        @if (etape() === 6) {
+          <h2>Combien de personnes habitent dans votre logement ?</h2>
+          <div class="counter-box">
+            <span>Nombre de personnes</span>
+            <div class="counter">
+              <button class="counter-btn" (click)="decrementer()">−</button>
+              <span class="counter-val">{{ personnes() }}</span>
+              <button class="counter-btn" (click)="incrementer()">+</button>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn-retour" (click)="retour()">← Retour</button>
+            <button class="btn-continuer" (click)="suivant()">Continuer</button>
+          </div>
+        }
+
+        <!-- ÉTAPE 7 — Chauffage -->
+        @if (etape() === 7) {
+          <h2>Quel mode de chauffage utilisez-vous ?</h2>
+          <div class="choix-liste">
+            <div class="choix-liste-item" [class.selected]="chauffage() === 'gaz'" (click)="select('chauffage','gaz')">
+              <span>🔥</span> Individuel (gaz)
+            </div>
+            <div class="choix-liste-item" [class.selected]="chauffage() === 'electricite'" (click)="select('chauffage','electricite')">
+              <span>💡</span> Individuel (électricité)
+            </div>
+            <div class="choix-liste-item" [class.selected]="chauffage() === 'collectif'" (click)="select('chauffage','collectif')">
+              <span>🏭</span> Collectif
+            </div>
+            <div class="choix-liste-item" [class.selected]="chauffage() === 'fioul'" (click)="select('chauffage','fioul')">
+              <span>🛢️</span> Individuel (fioul, bois...)
+            </div>
+          </div>
+          <button class="btn-retour" (click)="retour()">← Retour</button>
+        }
+
+        <!-- ÉTAPE 8 — Eau chaude -->
+        @if (etape() === 8) {
+          <h2>Comment votre eau est-elle chauffée ?</h2>
+          <div class="choix-liste">
+            <div class="choix-liste-item" [class.selected]="eauChaude() === 'gaz'" (click)="select('eauChaude','gaz')">
+              <span>🔥</span> Individuel (gaz)
+            </div>
+            <div class="choix-liste-item" [class.selected]="eauChaude() === 'electricite'" (click)="select('eauChaude','electricite')">
+              <span>💡</span> Individuel (électricité)
+            </div>
+            <div class="choix-liste-item" [class.selected]="eauChaude() === 'collectif'" (click)="select('eauChaude','collectif')">
+              <span>🏭</span> Collectif
+            </div>
+            <div class="choix-liste-item" [class.selected]="eauChaude() === 'fioul'" (click)="select('eauChaude','fioul')">
+              <span>🛢️</span> Individuel (fioul, bois...)
+            </div>
+          </div>
+          <button class="btn-retour" (click)="retour()">← Retour</button>
+        }
+
+        <!-- ÉTAPE 9 — Cuisine -->
+        @if (etape() === 9) {
+          <h2>Quel type d'énergie utilisez-vous pour votre cuisine ?</h2>
+          <div class="choix-liste">
+            <div class="choix-liste-item" [class.selected]="cuisine() === 'gaz'" (click)="select('cuisine','gaz')">
+              <span>🔥</span> Gaz (réseau)
+            </div>
+            <div class="choix-liste-item" [class.selected]="cuisine() === 'electricite'" (click)="select('cuisine','electricite')">
+              <span>💡</span> Électricité
+            </div>
+            <div class="choix-liste-item" [class.selected]="cuisine() === 'gaz-bouteille'" (click)="select('cuisine','gaz-bouteille')">
+              <span>🫙</span> Gaz (bouteille)
+            </div>
+            <div class="choix-liste-item" [class.selected]="cuisine() === 'autre'" (click)="select('cuisine','autre')">
+              <span>❓</span> Autre
+            </div>
+          </div>
+          <button class="btn-retour" (click)="retour()">← Retour</button>
+        }
+
+        <!-- ÉTAPE 10 — Coordonnées -->
+        @if (etape() === 10) {
+          <h2>Quel est votre prénom ?</h2>
+          <input class="input-field" type="text" placeholder="Votre prénom"
+                 [value]="prenom()" (input)="prenom.set($any($event.target).value)" />
+
+          <h2>Quel est votre email ?</h2>
+          <input class="input-field" type="email" placeholder="votre@email.com"
+                 [value]="email()" (input)="email.set($any($event.target).value)" />
+          <p class="securite">🛡️ Vos données sont sécurisées.</p>
+
+          <h2>Quel est votre numéro de téléphone ?</h2>
+          <input class="input-field" type="tel" placeholder="06 00 00 00 00"
+                 [value]="telephone()" (input)="telephone.set($any($event.target).value)" />
+
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" [checked]="cgv()" (change)="cgv.set($any($event.target).checked)" />
+              J'accepte les <a href="#">Conditions Générales d'Utilisation</a>.
+            </label>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn-retour" (click)="retour()">← Retour</button>
+            <button class="btn-continuer"
+                    [disabled]="!prenom() || !email() || !telephone() || !cgv()"
+                    (click)="soumettre()">
+              Voir mes offres →
+            </button>
+          </div>
+        }
+
+      </div>
+    }
+
+    @if (soumis()) {
+
+      @if (chargement()) {
+        <div class="loading-box">
+          <div class="spinner"></div>
+          <p>Recherche des meilleures offres pour vous...</p>
+        </div>
+      }
+
+      @if (!chargement() && erreur()) {
+        <div class="erreur-box">
+          <p>{{ erreur() }}</p>
+          <button class="btn-continuer" (click)="recommencer()">Recommencer</button>
+        </div>
+      }
+
+      @if (!chargement() && !erreur()) {
+        <div class="resultats-header">
+          <h2>Bonjour {{ prenom() }}, voici vos meilleures offres !</h2>
+          <p class="sous-titre">Résultats personnalisés selon votre profil de consommation.</p>
+        </div>
+
+        @if (resultatsElec().length > 0) {
+          <p class="section-energie">⚡ Électricité — estimation {{ consommationElec() | number:'1.0-0' }} kWh/an</p>
+          @for (offre of resultatsElec(); track offre.id) {
+            <div class="offre-card" [class.offre-top]="offre.rank === 1">
+              <div class="offre-rank">#{{ offre.rank }}</div>
+              <div class="offre-info">
+                <div class="offre-nom">{{ offre.provider_name }} — {{ offre.offer_name }}</div>
+                <div class="offre-details">
+                  {{ offre.subscription_price | number:'1.2-2' }} €/an · {{ offre.price_per_kwh | number:'1.4-4' }} €/kWh
+                  @if (offre.green_energy) {<span class="badge-vert">♻️ Vert</span>}
+                  @if (offre.contract_duration) {<span class="badge-duree">{{ offre.contract_duration }} mois</span>}
+                </div>
+              </div>
+              <div class="offre-cout">
+                {{ offre.annual_cost | number:'1.0-0' }} €
+                <span class="cout-label">/an</span>
+              </div>
+            </div>
+          }
+        }
+
+        @if (resultatsGaz().length > 0) {
+          <p class="section-energie">🔥 Gaz — estimation {{ consommationGaz() | number:'1.0-0' }} kWh/an</p>
+          @for (offre of resultatsGaz(); track offre.id) {
+            <div class="offre-card" [class.offre-top]="offre.rank === 1">
+              <div class="offre-rank">#{{ offre.rank }}</div>
+              <div class="offre-info">
+                <div class="offre-nom">{{ offre.provider_name }} — {{ offre.offer_name }}</div>
+                <div class="offre-details">
+                  {{ offre.subscription_price | number:'1.2-2' }} €/an · {{ offre.price_per_kwh | number:'1.4-4' }} €/kWh
+                  @if (offre.green_energy) {<span class="badge-vert">♻️ Vert</span>}
+                  @if (offre.contract_duration) {<span class="badge-duree">{{ offre.contract_duration }} mois</span>}
+                </div>
+              </div>
+              <div class="offre-cout">
+                {{ offre.annual_cost | number:'1.0-0' }} €
+                <span class="cout-label">/an</span>
+              </div>
+            </div>
+          }
+        }
+
+        @if (resultatsElec().length === 0 && resultatsGaz().length === 0) {
+          <div class="no-results">
+            <p>Aucune offre disponible pour le moment. La base de données est vide.</p>
+          </div>
+        }
+
+        <button class="btn-recommencer" (click)="recommencer()">Faire une nouvelle comparaison</button>
+      }
+
+    }
+
+  </div>
+</section>

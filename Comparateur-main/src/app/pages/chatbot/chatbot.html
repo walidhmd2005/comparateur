@@ -1,0 +1,70 @@
+<section class="chat-page">
+  <div class="chat-wrapper">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="bot-avatar">⚡</div>
+      <div class="bot-info">
+        <h3>Assistant Énergie IA</h3>
+        <span class="status">● En ligne</span>
+      </div>
+      <div class="header-badge">Powered by IA</div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages">
+      @for (msg of messages(); track $index) {
+        <div class="message" [class.user]="msg.role === 'user'" [class.bot]="msg.role === 'bot'">
+          @if (msg.role === 'bot') {
+            <div class="avatar">⚡</div>
+          }
+          <div class="bubble-wrap">
+            <div class="bubble">{{ msg.text }}</div>
+            <span class="time">{{ msg.time }}</span>
+          </div>
+          @if (msg.role === 'user') {
+            <div class="avatar user-avatar">👤</div>
+          }
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="message bot">
+          <div class="avatar">⚡</div>
+          <div class="bubble-wrap">
+            <div class="bubble typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div #messagesEnd></div>
+    </div>
+
+    <!-- Suggestions -->
+    @if (messages().length <= 2) {
+      <div class="suggestions">
+        @for (s of suggestions; track s) {
+          <button class="suggestion-btn" (click)="useSuggestion(s)">{{ s }}</button>
+        }
+      </div>
+    }
+
+    <!-- Input -->
+    <div class="chat-input-wrap">
+      <textarea
+        class="chat-input"
+        placeholder="Posez votre question sur l'énergie..."
+        [value]="input()"
+        (input)="input.set($any($event.target).value)"
+        (keydown)="onKeydown($event)"
+        rows="1">
+      </textarea>
+      <button class="send-btn" [disabled]="!input().trim() || loading()" (click)="envoyer()">
+        ➤
+      </button>
+    </div>
+
+  </div>
+</section>
